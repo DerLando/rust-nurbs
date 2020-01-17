@@ -68,5 +68,8 @@ mod tests {
         let u = 0.4;
 
         assert_eq!(all_bernstein(2, u), vec![1.0 - u, u, 1.0]);
+
+        let u = 0.3;
+        assert_eq!(all_bernstein(2, u), vec![1.0 - u, u, 1.0]);
     }
 }
