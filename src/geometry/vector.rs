@@ -40,3 +40,19 @@ impl Add<f64> for Vector {
         Vector::new(self.x + rhs, self.y + rhs, self.z + rhs)
     }
 }
+
+impl Add<Vector> for f64 {
+    type Output = Vector;
+
+    fn add(self, rhs: Vector) -> Vector {
+        Vector::new(self + rhs.x, self + rhs.y, self + rhs.z)
+    }
+}
+
+impl Add<Vector> for Vector {
+    type Output = Self;
+
+    fn add(self, rhs: Vector) -> Vector {
+        Vector::new(self.x + rhs.x, self.y + rhs.y, self.z + rhs.z)
+    }
+}

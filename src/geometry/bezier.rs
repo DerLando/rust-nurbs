@@ -4,7 +4,7 @@ use crate::{
     };
 
 pub struct Bezier {
-    control_points: Vec<Vector>,
+    pub control_points: Vec<Vector>,
 }
 
 impl Bezier {
