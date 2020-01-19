@@ -34,7 +34,7 @@ mod tests {
     use crate::geometry::{Vector, BezierCurve};
 
     #[test]
-    fn horner_should_worik() {
+    fn horner_should_work() {
         let v0 = Vector::zero();
         let v1 = Vector::new(3.0, 3.0, 0.0);
         let curve = BezierCurve::new(vec![v0, v1]);
@@ -42,6 +42,9 @@ mod tests {
         let mid_point = horner(&curve.control_points, curve.degree() - 1, 0.5);
 
         assert_eq!(mid_point, Vector::new(1.5, 1.5, 0.0));
+
+        assert_eq!(horner(&curve.control_points, curve.degree() - 1, 0.0), v0);
+        assert_eq!(horner(&curve.control_points, curve.degree() - 1, 1.0), v1);
     }
 
     #[test]
