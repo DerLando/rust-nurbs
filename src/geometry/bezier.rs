@@ -3,13 +3,13 @@ use crate::{
     algorithms::{all_bernstein, compute_bernstein},
     };
 
-pub struct Bezier {
+pub struct BezierCurve {
     pub control_points: Vec<Vector>,
 }
 
-impl Bezier {
-    pub fn new(control_points: Vec<Vector>) -> Bezier {
-        Bezier {
+impl BezierCurve {
+    pub fn new(control_points: Vec<Vector>) -> BezierCurve {
+        BezierCurve {
             control_points: control_points
         }
     }
@@ -39,13 +39,13 @@ impl Bezier {
 
 #[cfg(test)]
 mod tests {
-    use crate::geometry::{Vector, Bezier};
+    use crate::geometry::{Vector, BezierCurve};
 
     #[test]
     fn point_at_should_work() {
         let v0 = Vector::zero();
         let v1 = Vector::new(2.0, 2.0, 0.0);
-        let bezier = Bezier::new(vec![v0, v1]);
+        let bezier = BezierCurve::new(vec![v0, v1]);
 
         assert_eq!(bezier.point_at(0.5), Vector::new(1.0, 1.0, 0.0));
     }

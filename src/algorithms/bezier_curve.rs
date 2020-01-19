@@ -31,13 +31,13 @@ pub fn de_casteljeau(points: &Vec<Vector>, n: usize, u: f64) -> Vector {
 #[cfg(test)]
 mod tests {
     use crate::algorithms::{horner, de_casteljeau};
-    use crate::geometry::{Vector, Bezier};
+    use crate::geometry::{Vector, BezierCurve};
 
     #[test]
     fn horner_should_worik() {
         let v0 = Vector::zero();
         let v1 = Vector::new(3.0, 3.0, 0.0);
-        let curve = Bezier::new(vec![v0, v1]);
+        let curve = BezierCurve::new(vec![v0, v1]);
 
         let mid_point = horner(&curve.control_points, curve.degree() - 1, 0.5);
 
@@ -48,7 +48,7 @@ mod tests {
     fn de_casteljeau_should_work() {
         let v0 = Vector::zero();
         let v1 = Vector::new(3.0, 3.0, 0.0);
-        let curve = Bezier::new(vec![v0, v1]);
+        let curve = BezierCurve::new(vec![v0, v1]);
 
         let mid_point = de_casteljeau(&curve.control_points, curve.degree(), 0.5);
 
