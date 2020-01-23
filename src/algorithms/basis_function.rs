@@ -16,6 +16,7 @@ pub fn find_span(n: usize, p: usize, u: f64, knots: Vec<f64>) -> usize {
     mid
 }
 
+/// Calculates the values of basis functions for a fixed u
 pub fn calculate_basis_functions(span: usize, u: f64, p: usize, knots: Vec<f64>) -> Vec<f64> {
     let mut basis_functions: Vec<f64> = repeat(0.0).take(p + 1).collect();
     basis_functions[0] = 1.0;

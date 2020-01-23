@@ -1,30 +1,30 @@
 use crate::{
     algorithms::{horner, de_casteljeau},
     geometry::Vector,
-    utils::Matrix,
 };
+use ndarray::Array2;
 
 /// Computes a point on a power-basis tensor-product surface
-pub fn horner_surface(points: Box<dyn Matrix<Vector>>, n: usize, m: usize, u: f64, v: f64) -> Vector {
+pub fn horner_surface(points: Array2<Vector>, n: usize, m: usize, u: f64, v: f64) -> Vector {
     let mut b: Vec<Vector> = Vec::new();
     for i in 0..n + 1 {
-        b.push(horner(&points.row(i), m, v));
+        b.push(horner(&points.row(i).to_vec(), m, v));
     }
     horner(&b, n, u)
 }
 
 /// Computes a point on a bezier Surface 
-pub fn de_casteljeau_surface(points: Box<dyn Matrix<Vector>>, n: usize, m: usize, u: f64, v: f64) -> Vector {
+pub fn de_casteljeau_surface(points: Array2<Vector>, n: usize, m: usize, u: f64, v: f64) -> Vector {
     let mut q: Vec<Vector> = Vec::new();
     if n <= m {
         for j in 0..m + 1 {
-            q.push(de_casteljeau(&points.row(j), n, u));
+            q.push(de_casteljeau(&points.row(j).to_vec(), n, u));
         }
         de_casteljeau(&q, m, v)
     }
     else {
         for i in 0..n + 1 {
-            q.push(de_casteljeau(&points.column(i), m, v));
+            q.push(de_casteljeau(&points.column(i).to_vec(), m, v));
         }
         de_casteljeau(&q, n, u)
     }
