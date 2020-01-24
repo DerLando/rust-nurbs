@@ -129,9 +129,46 @@ pub fn calculate_basis_functions_and_derivatives(span: usize, u: f64, p: usize, 
     ders
 }
 
+/// Calculates only one basis function
+pub fn calculate_one_basis_function(p: usize, m: usize, knots: Vec<f64>, span: usize, u: f64) -> f64 {
+    // trivial cases
+    if ((span == 0) && (u == knots[0])) || ((span == m - p - 1) && (u == knots[m])) {return 1.0;}
+
+    if (u < knots[span]) || (u >= knots[span + p + 1]) {return 0.0;}
+
+    // initialize table to either ones or zeros
+    let mut table: Vec<f64> = (0..p + 1).map(|j| {
+        if (u >= knots[span + j]) && (u < knots[span + j + 1]) {1.0}
+        else {0.0}
+    }).collect();
+
+    for k in 1..p + 1 {
+        let mut saved: f64;
+        if table[0] == 0.0 {saved = 0.0;}
+        else {saved = ((u - knots[span]) * table[0]) / (knots[span + k] - knots[span]);}
+
+        for j in 0..p - k + 1 {
+            let knot_left = knots[span + j + 1];
+            let knot_right = knots[span + j + k + 1];
+            if table[j + 1] == 0.0 {
+                table[j] = saved;
+                saved = 0.0;
+            }
+            else {
+                let temp = table[j + 1] / (knot_right - knot_left);
+                table[j] = saved + (knot_right - u) * temp;
+                saved = (u - knot_left) * temp;
+            }
+        }
+    }
+    
+    table[0]
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::algorithms::{find_span, calculate_basis_functions, calculate_basis_functions_and_derivatives};
+    use crate::algorithms::{find_span, calculate_basis_functions, calculate_basis_functions_and_derivatives,
+                            calculate_one_basis_function,};
     use ndarray::arr2;
 
     #[test]
@@ -184,6 +221,22 @@ mod tests {
         let expected = arr2(&[[0.125, 0.75, 0.125],
                                 [-0.5, 0.0, 0.5],
                                 [0.0, 0.0, 1.0]]);
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn calculate_one_basis_function_should_work() {
+        let knots = vec![0.0, 0.0, 0.0, 1.0, 2.0, 3.0, 4.0, 4.0, 5.0, 5.0, 5.0];
+        let u = 5.0 / 2.0;
+
+        let actual = calculate_one_basis_function(2, knots.len() - 1, knots.to_vec(), 4, u);
+        let expected = 1.0 / 8.0;
+
+        assert_eq!(actual, expected);
+
+        let actual = calculate_one_basis_function(2, knots.len() - 1, knots.to_vec(), 3, u);
+        let expected = 6.0 / 8.0;
 
         assert_eq!(actual, expected);
     }
